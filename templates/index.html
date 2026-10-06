@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Gym & Fitness Tracker</title>
+
+    <link rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <div class="logo-box">G</div>
+
+            <div>
+                <h2>GYMTRACK</h2>
+                <p>Fitness Tracker</p>
+            </div>
+        </div>
+
+        <nav>
+
+            <a href="/" class="active">
+                🏠 Dashboard
+            </a>
+
+            <a href="#profile">
+                👤 My Profile
+            </a>
+
+            <a href="#workouts">
+                🏋️ Workouts
+            </a>
+
+            <a href="#nutrition">
+                🍎 Nutrition
+            </a>
+
+            <a href="#progress">
+                📊 Progress
+            </a>
+
+        </nav>
+
+        <div class="project-box">
+            <h3>Python Project</h3>
+            <p>Gym & Fitness Tracker</p>
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main">
+
+        <!-- HEADER -->
+
+        <header class="header">
+
+            <div>
+                <p class="small-title">FITNESS DASHBOARD</p>
+
+                <h1>
+                    Welcome, {{ profile.name }} 👋
+                </h1>
+
+                <p>
+                    Here's your fitness overview for today.
+                </p>
+            </div>
+
+            <div class="goal">
+                🎯 {{ profile.goal }}
+            </div>
+
+        </header>
+
+
+        <!-- STAT CARDS -->
+
+        <section class="stats">
+
+            <div class="stat-card">
+
+                <div class="icon purple">⚖️</div>
+
+                <div>
+                    <p>BMI</p>
+                    <h2>{{ bmi }}</h2>
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="icon orange">🔥</div>
+
+                <div>
+                    <p>Daily Calories</p>
+
+                    <h2>
+                        {{ total_calories }}
+                    </h2>
+
+                    <small>kcal / day</small>
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="icon green">🥩</div>
+
+                <div>
+                    <p>Protein Consumed</p>
+
+                    <h2>
+                        {{ total_protein }}g
+                    </h2>
+
+                    <small>Today's intake</small>
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="icon blue">🏋️</div>
+
+                <div>
+                    <p>Workouts</p>
+
+                    <h2>
+                        {{ workouts|length }}
+                    </h2>
+
+                    <small>Exercises logged</small>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- PROFILE + BMI -->
+
+        <section class="grid-two" id="profile">
+
+            <!-- PROFILE CARD -->
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <div>
+                        <p class="section-label">
+                            YOUR PROFILE
+                        </p>
+
+                        <h2>Fitness Profile</h2>
+                    </div>
+
+                    <span class="card-icon">
+                        👤
+                    </span>
+
+                </div>
+
+
+                <form action="/profile" method="POST">
+
+                    <div class="form-grid">
+
+                        <div class="input-group">
+
+                            <label>Name</label>
+
+                            <input
+                                type="text"
+                                name="name"
+                                value="{{ profile.name }}"
+                                required>
+
+                        </div>
+
+
+                        <div class="input-group">
+
+                            <label>Age</label>
+
+                            <input
+                                type="number"
+                                name="age"
+                                value="{{ profile.age }}"
+                                required>
+
+                        </div>
+
+
+                        <div class="input-group">
+
+                            <label>Height (cm)</label>
+
+                            <input
+                                type="number"
+                                name="height"
+                                value="{{ profile.height }}"
+                                required>
+
+                        </div>
+
+
+                        <div class="input-group">
+
+                            <label>Weight (kg)</label>
+
+                            <input
+                                type="number"
+                                step="0.1"
+                                name="weight"
+                                value="{{ profile.weight }}"
+                                required>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="input-group">
+
+                        <label>Fitness Goal</label>
+
+                        <select name="goal">
+
+                            <option
+                                {% if profile.goal == "Muscle Gain" %}
+                                selected
+                                {% endif %}>
+                                Muscle Gain
+                            </option>
+
+                            <option
+                                {% if profile.goal == "Weight Loss" %}
+                                selected
+                                {% endif %}>
+                                Weight Loss
+                            </option>
+
+                            <option
+                                {% if profile.goal == "Maintain Weight" %}
+                                selected
+                                {% endif %}>
+                                Maintain Weight
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <button type="submit">
+                        Update Profile
+                    </button>
+
+                </form>
+
+            </div>
+
+
+            <!-- BMI CARD -->
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <div>
+                        <p class="section-label">
+                            HEALTH METRIC
+                        </p>
+
+                        <h2>BMI Analysis</h2>
+                    </div>
+
+                    <span class="card-icon">
+                        📈
+                    </span>
+
+                </div>
+
+
+                <div class="bmi-number">
+                    {{ bmi }}
+                </div>
+
+                <div class="bmi-status">
+                    {{ bmi_status }}
+                </div>
+
+
+                <div class="bmi-bar">
+
+                    <div class="bmi-progress"></div>
+
+                </div>
+
+
+                <div class="bmi-labels">
+
+                    <span>Underweight</span>
+
+                    <span>Normal</span>
+
+                    <span>Overweight</span>
+
+                    <span>Obese</span>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <h3>
+                        Your BMI is {{ bmi }}
+                    </h3>
+
+                    <p>
+                        BMI is calculated using your height
+                        and weight through Python.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- WORKOUT -->
+
+        <section class="grid-two" id="workouts">
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <div>
+                        <p class="section-label">
+                            TRAINING
+                        </p>
+
+                        <h2>Add Workout</h2>
+                    </div>
+
+                    <span class="card-icon">
+                        🏋️
+                    </span>
+
+                </div>
+
+
+                <form action="/workout" method="POST">
+
+                    <div class="input-group">
+
+                        <label>Exercise</label>
+
+                        <input
+                            type="text"
+                            name="exercise"
+                            placeholder="e.g. Bench Press"
+                            required>
+
+                    </div>
+
+
+                    <div class="form-grid">
+
+                        <div class="input-group">
+
+                            <label>Sets</label>
+
+                            <input
+                                type="number"
+                                name="sets"
+                                placeholder="3"
+                                required>
+
+                        </div>
+
+
+                        <div class="input-group">
+
+                            <label>Reps</label>
+
+                            <input
+                                type="number"
+                                name="reps"
+                                placeholder="10"
+                                required>
+
+                        </div>
+
+                    </div>
+
+
+                    <button type="submit">
+                        Add Workout
+                    </button>
+
+                </form>
+
+            </div>
+
+
+            <!-- WORKOUT LIST -->
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <div>
+                        <p class="section-label">
+                            TODAY
+                        </p>
+
+                        <h2>Workout Log</h2>
+                    </div>
+
+                </div>
+
+
+                {% if workouts %}
+
+                    {% for workout in workouts %}
+
+                    <div class="list-item">
+
+                        <div>
+
+                            <strong>
+                                {{ workout.exercise }}
+                            </strong>
+
+                            <p>
+                                {{ workout.sets }}
+                                sets ×
+                                {{ workout.reps }}
+                                reps
+                            </p>
+
+                        </div>
+
+                        <span>✓</span>
+
+                    </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <p class="empty">
+                        No workouts added yet.
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+        </section>
+
+
+        <!-- NUTRITION -->
+
+        <section class="grid-two" id="nutrition">
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <div>
+                        <p class="section-label">
+                            NUTRITION
+                        </p>
+
+                        <h2>Add Meal</h2>
+                    </div>
+
+                    <span class="card-icon">
+                        🍎
+                    </span>
+
+                </div>
+
+
+                <form action="/meal" method="POST">
+
+                    <div class="input-group">
+
+                        <label>Food / Meal</label>
+
+                        <input
+                            type="text"
+                            name="food"
+                            placeholder="e.g. Chicken & Rice"
+                            required>
+
+                    </div>
+
+
+                    <div class="form-grid">
+
+                        <div class="input-group">
+
+                            <label>Calories</label>
+
+                            <input
+                                type="number"
+                                name="calories"
+                                placeholder="500"
+                                required>
+
+                        </div>
+
+
+                        <div class="input-group">
+
+                            <label>Protein (g)</label>
+
+                            <input
+                                type="number"
+                                name="protein"
+                                placeholder="30"
+                                required>
+
+                        </div>
+
+                    </div>
+
+
+                    <button type="submit">
+                        Add Meal
+                    </button>
+
+                </form>
+
+            </div>
+
+
+            <!-- MEAL LIST -->
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <div>
+                        <p class="section-label">
+                            TODAY
+                        </p>
+
+                        <h2>Nutrition Log</h2>
+                    </div>
+
+                </div>
+
+
+                {% if meals %}
+
+                    {% for meal in meals %}
+
+                    <div class="list-item">
+
+                        <div>
+
+                            <strong>
+                                {{ meal.food }}
+                            </strong>
+
+                            <p>
+                                {{ meal.calories }} kcal
+                                •
+                                {{ meal.protein }}g protein
+                            </p>
+
+                        </div>
+
+                        <span>🍽️</span>
+
+                    </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <p class="empty">
+                        No meals added yet.
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+        </section>
+
+
+        <!-- PROGRESS -->
+
+        <section id="progress">
+
+            <div class="card progress-card">
+
+                <div class="card-header">
+
+                    <div>
+                        <p class="section-label">
+                            PROGRESS
+                        </p>
+
+                        <h2>Fitness Summary</h2>
+                    </div>
+
+                    <span class="card-icon">
+                        📊
+                    </span>
+
+                </div>
+
+
+                <div class="progress-grid">
+
+                    <div>
+                        <span>Current Weight</span>
+                        <strong>
+                            {{ profile.weight }} kg
+                        </strong>
+                    </div>
+
+                    <div>
+                        <span>Height</span>
+                        <strong>
+                            {{ profile.height }} cm
+                        </strong>
+                    </div>
+
+                    <div>
+                        <span>BMI</span>
+                        <strong>
+                            {{ bmi }}
+                        </strong>
+                    </div>
+
+                    <div>
+                        <span>Goal</span>
+                        <strong>
+                            {{ profile.goal }}
+                        </strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <footer>
+
+            <p>
+                Gym & Fitness Tracker
+                • Python Flask Project
+            </p>
+
+        </footer>
+
+    </main>
+
+</div>
+
+</body>
+
+</html>
